@@ -1,6 +1,6 @@
 package Supermercado.Controller;
 
-import Supermercado.Dao.UsuarioDao;
+import Supermercado.Model.Dao.UsuarioDao;
 import Supermercado.Model.UsuarioModel;
 
 public class RegistroController {

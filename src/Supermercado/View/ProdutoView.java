@@ -6,6 +6,7 @@ import Supermercado.Model.UsuarioModel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.util.List;
 
 public class ProdutoView extends JFrame {
@@ -20,10 +21,20 @@ public class ProdutoView extends JFrame {
         controller = new ProdutoController();
 
         setTitle("Gerenciamento de Produtos (Admin)");
-        setSize(700, 400);
+        setSize(800, 500);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(null);
+
+        JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        mainPanel.setBackground(new Color(245, 245, 245));
+        setContentPane(mainPanel);
+
+        JLabel lblTitle = new JLabel("Gerenciamento de Produtos");
+        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
+        lblTitle.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
+        mainPanel.add(lblTitle, BorderLayout.NORTH);
 
         tableModel = new DefaultTableModel(new String[]{"ID", "Nome", "Preço", "Estoque"}, 0) {
             @Override
@@ -32,25 +43,28 @@ public class ProdutoView extends JFrame {
             }
         };
         table = new JTable(tableModel);
+        table.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        table.setRowHeight(25);
+        table.setFillsViewportHeight(true);
+
         JScrollPane scroll = new JScrollPane(table);
-        scroll.setBounds(20, 20, 640, 200);
-        add(scroll);
+        scroll.setBorder(BorderFactory.createTitledBorder("Produtos Cadastrados"));
+        mainPanel.add(scroll, BorderLayout.CENTER);
 
-        btnAdd = new JButton("Adicionar");
-        btnAdd.setBounds(20, 240, 120, 30);
-        add(btnAdd);
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        buttonPanel.setBackground(new Color(245, 245, 245));
 
-        btnEdit = new JButton("Editar");
-        btnEdit.setBounds(160, 240, 120, 30);
-        add(btnEdit);
+        btnAdd = createButton("Adicionar", new Color(102, 178, 255));
+        btnEdit = createButton("Editar", new Color(255, 178, 102));
+        btnRemove = createButton("Remover", new Color(255, 102, 102));
+        btnLogout = createButton("Deslogar", new Color(150, 150, 150));
 
-        btnRemove = new JButton("Remover");
-        btnRemove.setBounds(300, 240, 120, 30);
-        add(btnRemove);
+        buttonPanel.add(btnAdd);
+        buttonPanel.add(btnEdit);
+        buttonPanel.add(btnRemove);
+        buttonPanel.add(btnLogout);
 
-        btnLogout = new JButton("Deslogar");
-        btnLogout.setBounds(500, 240, 120, 30);
-        add(btnLogout);
+        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         btnAdd.addActionListener(e -> openAddDialog());
         btnEdit.addActionListener(e -> openEditDialog());
@@ -58,6 +72,15 @@ public class ProdutoView extends JFrame {
         btnLogout.addActionListener(e -> logout());
 
         refreshTable();
+    }
+
+    private JButton createButton(String text, Color color) {
+        JButton button = new JButton(text);
+        button.setBackground(color);
+        button.setForeground(Color.WHITE);
+        button.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        button.setFocusPainted(false);
+        return button;
     }
 
     private void refreshTable() {
@@ -78,7 +101,6 @@ public class ProdutoView extends JFrame {
         if (row < 0) {
             return -1;
         }
-
         return (int) tableModel.getValueAt(row, 0);
     }
 
@@ -98,14 +120,9 @@ public class ProdutoView extends JFrame {
                 double preco = Double.parseDouble(tfPrice.getText().trim());
                 int estoque = Integer.parseInt(tfStock.getText().trim());
                 boolean ok = controller.addProduct(nome, preco, estoque);
-                if (ok) {
-                    JOptionPane.showMessageDialog(this, "Produto adicionado com sucesso.");
-                } else {
-                    JOptionPane.showMessageDialog(this, "Falha ao adicionar produto.");
-                }
+                JOptionPane.showMessageDialog(this, ok ? "Produto adicionado com sucesso." : "Falha ao adicionar produto.");
                 refreshTable();
             } catch (Exception ex) {
-                ex.printStackTrace();
                 JOptionPane.showMessageDialog(this, "Dados inválidos: " + ex.getMessage());
             }
         }
@@ -137,15 +154,10 @@ public class ProdutoView extends JFrame {
                 p.setPreco(Double.parseDouble(tfPrice.getText().trim()));
                 p.setEstoque(Integer.parseInt(tfStock.getText().trim()));
                 boolean ok = controller.updateProduct(p);
-                if (ok) {
-                    JOptionPane.showMessageDialog(this, "Produto atualizado.");
-                } else {
-                    JOptionPane.showMessageDialog(this, "Falha ao atualizar.");
-                }
+                JOptionPane.showMessageDialog(this, ok ? "Produto atualizado." : "Falha ao atualizar.");
                 refreshTable();
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Erro: " + ex.getMessage());
         }
     }
@@ -157,8 +169,7 @@ public class ProdutoView extends JFrame {
             return;
         }
 
-        Object[] opcoes = {"Sim", "Não"};
-
+        Object[] options = {"Sim", "Não"};
         int opt = JOptionPane.showOptionDialog(
                 this,
                 "Confirma remoção?",
@@ -166,23 +177,30 @@ public class ProdutoView extends JFrame {
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
                 null,
-                opcoes,
-                opcoes[1]
+                options,
+                options[1]
         );
 
-        if (opt == 0) {
+        if (opt == JOptionPane.YES_OPTION) {
             boolean ok = controller.deleteProduct(id);
-            if (ok) {
-                JOptionPane.showMessageDialog(this, "Produto removido.");
-            } else {
-                JOptionPane.showMessageDialog(this, "Falha ao remover.");
-            }
+            JOptionPane.showMessageDialog(this, ok ? "Produto removido." : "Falha ao remover.");
             refreshTable();
         }
     }
 
     private void logout() {
-        int opt = JOptionPane.showConfirmDialog(this, "Deseja deslogar?", "Sair", JOptionPane.YES_NO_OPTION);
+        Object[] options = {"Sim", "Não"};
+        int opt = JOptionPane.showOptionDialog(
+                this,
+                "Deseja deslogar?",
+                "Sair",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[1]
+        );
+
         if (opt == JOptionPane.YES_OPTION) {
             new LoginView().setVisible(true);
             dispose();

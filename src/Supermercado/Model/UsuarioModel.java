@@ -16,7 +16,6 @@ public class UsuarioModel {
         this.isAdmin = isAdmin;
     }
 
-    // Getters e Setters
     public int getId() {
         return id;
     }

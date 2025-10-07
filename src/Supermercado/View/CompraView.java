@@ -6,6 +6,7 @@ import Supermercado.Model.UsuarioModel;
 import Supermercado.Model.ProdutoModel;
 
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.util.List;
 
 public class CompraView extends JFrame {
@@ -24,46 +25,71 @@ public class CompraView extends JFrame {
         this.controller = new CompraController();
 
         setTitle("Compra de Produtos");
-        setSize(900, 500);
+        setSize(900, 550);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLayout(null);
 
-        productsModel = new DefaultTableModel(new String[]{"ID","Nome","Preço","Estoque"},0) {
+        JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        mainPanel.setBackground(new Color(245, 245, 245));
+        setContentPane(mainPanel);
+
+        productsModel = new DefaultTableModel(new String[]{"ID","Nome","Preço","Estoque"},0){
             public boolean isCellEditable(int r,int c){return false;}
         };
         tableProducts = new JTable(productsModel);
+        tableProducts.setFillsViewportHeight(true);
+        tableProducts.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         JScrollPane scrollProds = new JScrollPane(tableProducts);
-        scrollProds.setBounds(20,20,400,300);
-        add(scrollProds);
+        scrollProds.setBorder(BorderFactory.createTitledBorder("Produtos Disponíveis"));
+        scrollProds.setPreferredSize(new Dimension(400,300));
 
-        cartModel = new DefaultTableModel(new String[]{"ID","Nome","Preço"},0) {
+        cartModel = new DefaultTableModel(new String[]{"ID","Nome","Preço"},0){
             public boolean isCellEditable(int r,int c){return false;}
         };
         tableCart = new JTable(cartModel);
+        tableCart.setFillsViewportHeight(true);
+        tableCart.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         JScrollPane scrollCart = new JScrollPane(tableCart);
-        scrollCart.setBounds(450,20,400,300);
-        add(scrollCart);
+        scrollCart.setBorder(BorderFactory.createTitledBorder("Carrinho"));
+        scrollCart.setPreferredSize(new Dimension(400,300));
 
-        lblTotal = new JLabel("Total: R$ 0,00");
-        lblTotal.setBounds(450,340,200,25);
-        add(lblTotal);
+        JPanel centerPanel = new JPanel(new GridLayout(1, 2, 10, 0));
+        centerPanel.setBackground(new Color(245, 245, 245));
+        centerPanel.add(scrollProds);
+        centerPanel.add(scrollCart);
+        mainPanel.add(centerPanel, BorderLayout.CENTER);
+
+        JPanel actionPanel = new JPanel();
+        actionPanel.setBackground(new Color(245, 245, 245));
+        actionPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
 
         btnAddToCart = new JButton("Adicionar");
-        btnAddToCart.setBounds(20,340,200,30);
-        add(btnAddToCart);
+        btnAddToCart.setBackground(new Color(102, 178, 255));
+        btnAddToCart.setForeground(Color.WHITE);
 
         btnRemoveFromCart = new JButton("Remover");
-        btnRemoveFromCart.setBounds(240,340,200,30);
-        add(btnRemoveFromCart);
+        btnRemoveFromCart.setBackground(new Color(255, 102, 102));
+        btnRemoveFromCart.setForeground(Color.WHITE);
 
         btnCheckout = new JButton("Pagar");
-        btnCheckout.setBounds(450,380,200,30);
-        add(btnCheckout);
+        btnCheckout.setBackground(new Color(102, 204, 102));
+        btnCheckout.setForeground(Color.WHITE);
 
         btnLogout = new JButton("Deslogar");
-        btnLogout.setBounds(700,380,150,30);
-        add(btnLogout);
+        btnLogout.setBackground(new Color(150, 150, 150));
+        btnLogout.setForeground(Color.WHITE);
+
+        lblTotal = new JLabel("Total: R$ 0,00");
+        lblTotal.setFont(new Font("Segoe UI", Font.BOLD, 16));
+
+        actionPanel.add(btnAddToCart);
+        actionPanel.add(btnRemoveFromCart);
+        actionPanel.add(lblTotal);
+        actionPanel.add(btnCheckout);
+        actionPanel.add(btnLogout);
+
+        mainPanel.add(actionPanel, BorderLayout.SOUTH);
 
         btnAddToCart.addActionListener(e -> addToCart());
         btnRemoveFromCart.addActionListener(e -> removeFromCart());
@@ -125,19 +151,8 @@ public class CompraView extends JFrame {
     }
 
     private void logout() {
-        Object[] options = {"Sim","Não"};
-        int opt = JOptionPane.showOptionDialog(
-                this,
-                "Deseja deslogar?",
-                "Sair",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                options,
-                options[1]
-        );
-
-        if(opt == 0){
+        int opt = JOptionPane.showConfirmDialog(this,"Deseja deslogar?","Sair",JOptionPane.YES_NO_OPTION);
+        if(opt == JOptionPane.YES_OPTION){
             this.dispose();
             loginView.setVisible(true);
         }

@@ -1,6 +1,5 @@
-package Supermercado.Dao;
+package Supermercado.Model.Dao;
 
-import Supermercado.Dao.DBManager;
 import Supermercado.Model.ProdutoModel;
 
 import java.sql.*;

@@ -1,4 +1,4 @@
-package Supermercado.Dao;
+package Supermercado.Model.Dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -13,10 +13,9 @@ public class ProdutoModel {
         this.id = id;
         this.nome = nome;
         this.preco = preco;
-        this.estoque = this.estoque;
+        this.estoque = estoque;
     }
 
-    // Getters e Setters
     public int getId() {
         return id;
     }

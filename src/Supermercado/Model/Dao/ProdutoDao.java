@@ -1,4 +1,4 @@
-package Supermercado.Dao;
+package Supermercado.Model.Dao;
 
 import Supermercado.Model.ProdutoModel;
 
@@ -50,11 +50,21 @@ public class ProdutoDao {
     }
 
     public void delete(int id) throws SQLException {
-        String sql = "DELETE FROM products WHERE id=?";
+        String sqlCheck = "SELECT COUNT(*) FROM purchase_items WHERE product_id=?";
+        String sqlDelete = "DELETE FROM products WHERE id=?";
+
         try (Connection conn = DBManager.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            stmt.executeUpdate();
+             PreparedStatement stmtCheck = conn.prepareStatement(sqlCheck);
+             PreparedStatement stmtDelete = conn.prepareStatement(sqlDelete)) {
+
+            stmtCheck.setInt(1, id);
+            ResultSet rs = stmtCheck.executeQuery();
+            if (rs.next() && rs.getInt(1) > 0) {
+                throw new SQLException("Não é possível deletar o produto, existem compras associadas.");
+            }
+
+            stmtDelete.setInt(1, id);
+            stmtDelete.executeUpdate();
         }
     }
 

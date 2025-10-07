@@ -34,7 +34,12 @@ public class Banco {
             quantity INT,
             FOREIGN KEY (purchase_id) REFERENCES purchases(id),
     FOREIGN KEY (product_id) REFERENCES products(id)
-            ); */
+            );
+
+            PARA CONECTAR O BANCO AO PROJETO USE ESSE TUTORIAL:
+            https://youtu.be/9ntKSLLDeSs
+
+            */
 }
 
 

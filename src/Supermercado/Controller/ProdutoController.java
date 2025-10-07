@@ -1,6 +1,6 @@
 package Supermercado.Controller;
 
-import Supermercado.Dao.ProdutoDao;
+import Supermercado.Model.Dao.ProdutoDao;
 import Supermercado.Model.ProdutoModel;
 
 import java.util.List;

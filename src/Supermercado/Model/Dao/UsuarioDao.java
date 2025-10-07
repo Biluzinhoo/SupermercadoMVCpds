@@ -1,4 +1,4 @@
-package Supermercado.Dao;
+package Supermercado.Model.Dao;
 
 import Supermercado.Model.UsuarioModel;
 import java.sql.*;

@@ -1,7 +1,7 @@
 package Supermercado.Controller;
 
-import Supermercado.Dao.CompraDao;
-import Supermercado.Dao.ProdutoDao;
+import Supermercado.Model.Dao.CompraDao;
+import Supermercado.Model.Dao.ProdutoDao;
 import Supermercado.Model.ProdutoModel;
 
 import java.sql.SQLException;
