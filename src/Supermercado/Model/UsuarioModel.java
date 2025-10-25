@@ -29,7 +29,7 @@ public class UsuarioModel {
     }
 
     public void setNome(String nome) {
-        this.nome = this.nome;
+        this.nome = nome;
     }
 
     public String getCpf() {

@@ -9,10 +9,12 @@ public class CompraDao {
 
     public void savePurchase(int userId, List<ProdutoModel> products) throws SQLException {
         String insertPurchase = "INSERT INTO purchases (user_id, total) VALUES (?, ?)";
-        String insertItem = "INSERT INTO purchase_items (purchase_id, product_id, quantity) VALUES (?, ?, ?)";
+        String insertItem = "INSERT INTO purchase_items (purchase_id, product_id, quantity, price) VALUES (?, ?, ?, ?)";
         String updateStock = "UPDATE products SET stock = stock - ? WHERE id=?";
 
-        double total = products.stream().mapToDouble(ProdutoModel::getPreco).sum();
+        double total = products.stream()
+                .mapToDouble(p -> p.getPreco() * p.getQuantidadeComprada())
+                .sum();
 
         try (Connection conn = DBManager.getConnection()) {
             conn.setAutoCommit(false);
@@ -34,10 +36,11 @@ public class CompraDao {
                 for (ProdutoModel p : products) {
                     psItem.setInt(1, purchaseId);
                     psItem.setInt(2, p.getId());
-                    psItem.setInt(3, 1); // por enquanto 1 unidade
+                    psItem.setInt(3, p.getQuantidadeComprada());
+                    psItem.setDouble(4, p.getPreco());
                     psItem.executeUpdate();
 
-                    psUpdate.setInt(1, 1);
+                    psUpdate.setInt(1, p.getQuantidadeComprada());
                     psUpdate.setInt(2, p.getId());
                     psUpdate.executeUpdate();
                 }

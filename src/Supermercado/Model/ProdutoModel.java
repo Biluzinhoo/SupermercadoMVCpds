@@ -5,46 +5,31 @@ public class ProdutoModel {
     private String nome;
     private double preco;
     private int estoque;
+    private int quantidadeComprada;
 
-    public ProdutoModel() {
-    }
+    public ProdutoModel() {}
 
     public ProdutoModel(int id, String nome, double preco, int estoque) {
         this.id = id;
         this.nome = nome;
         this.preco = preco;
         this.estoque = estoque;
+        this.quantidadeComprada = 1;
     }
 
-    public int getId() {
-        return id;
-    }
+    // Getters e Setters
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
 
-    public String getNome() {
-        return nome;
-    }
+    public double getPreco() { return preco; }
+    public void setPreco(double preco) { this.preco = preco; }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+    public int getEstoque() { return estoque; }
+    public void setEstoque(int estoque) { this.estoque = estoque; }
 
-    public double getPreco() {
-        return preco;
-    }
-
-    public void setPreco(double preco) {
-        this.preco = preco;
-    }
-
-    public int getEstoque() {
-        return estoque;
-    }
-
-    public void setEstoque(int estoque) {
-        this.estoque = estoque;
-    }
+    public int getQuantidadeComprada() { return quantidadeComprada; }
+    public void setQuantidadeComprada(int quantidadeComprada) { this.quantidadeComprada = quantidadeComprada; }
 }
